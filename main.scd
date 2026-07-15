@@ -6,12 +6,11 @@
 
 (
 var cargarProyecto;
+var raiz;
+
+raiz = PathName(thisProcess.nowExecutingPath).pathOnly;
 
 cargarProyecto = {
-    var raiz;
-
-    raiz = PathName(thisProcess.nowExecutingPath).pathOnly;
-
     "Cargando Proyecto Zero...".postln;
 
     thisProcess.interpreter.executeFile(
@@ -37,8 +36,6 @@ cargarProyecto = {
     thisProcess.interpreter.executeFile(
         raiz +/+ "tracks/drum_track.scd"
     );
-
-    s.sync;
 
     "Proyecto Zero cargado correctamente.".postln;
 };

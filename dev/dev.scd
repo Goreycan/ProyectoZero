@@ -1,16 +1,14 @@
 // ==========================================
-// CODE MUSIC LAB
 // PROYECTO ZERO
-// Panel de desarrollo
+// Panel manual de desarrollo
 // ==========================================
-//
-// Flujo normal:
-//
-// 1. Ejecutar CARGAR PROYECTO.
-// 2. Esperar "Proyecto Zero cargado".
-// 3. Ejecutar las pruebas deseadas.
-// 4. Detener pistas al terminar.
-//
+// Ejecuta cada bloque por separado en SuperCollider.
+// Flujo sugerido:
+// 1. Cargar el proyecto.
+// 2. Probar instrumentos.
+// 3. Iniciar la batería.
+// 4. Cambiar BPM o patrones en vivo.
+// 5. Detener la batería o liberar todo con Ctrl + .
 // ==========================================
 
 
@@ -21,7 +19,7 @@
 (
 var raiz;
 
-raiz = PathName(thisProcess.nowExecutingPath).pathOnly;
+raiz = PathName(thisProcess.nowExecutingPath).pathOnly +/+ "..";
 
 thisProcess.interpreter.executeFile(
     raiz +/+ "main.scd"
@@ -30,27 +28,13 @@ thisProcess.interpreter.executeFile(
 
 
 // ------------------------------------------
-// 2. ESTADO DEL SISTEMA
-// ------------------------------------------
-
-// Comprobar servidor
-s.serverRunning.postln;
-
-// Mostrar BPM actual
-~bpm.postln;
-
-// Mostrar tempo en beats por segundo
-~clock.tempo.postln;
-
-
-// ------------------------------------------
-// 3. PRUEBAS DE INSTRUMENTOS
+// 2. PROBAR INSTRUMENTOS
 // ------------------------------------------
 
 // Kick
 Synth(\kick);
 
-// Caja
+// Snare
 Synth(\snare);
 
 // Hi-hat
@@ -58,18 +42,18 @@ Synth(\hihat);
 
 
 // ------------------------------------------
-// 4. BATERÍA
+// 3. INICIAR Y DETENER LA BATERÍA
 // ------------------------------------------
 
-// Iniciar
+// Iniciar. Es seguro ejecutarlo varias veces: no duplica rutinas.
 ~startDrums.value;
 
-// Detener
+// Detener. Es seguro ejecutarlo aunque ya esté detenida.
 ~stopDrums.value;
 
 
 // ------------------------------------------
-// 5. CAMBIAR TEMPO
+// 4. CAMBIAR BPM
 // ------------------------------------------
 
 // 90 BPM
@@ -102,10 +86,12 @@ Synth(\hihat);
 
 
 // ------------------------------------------
-// 6. CAMBIO DE PATRONES EN VIVO
+// 5. MODIFICAR PATRONES EN VIVO
 // ------------------------------------------
+// Estos cambios se leen en la siguiente vuelta de la rutina.
+// No hace falta detener la batería.
 
-// Patrón post-punk básico
+// Patrón base
 (
 ~kickPattern = [
     1, 0, 0, 0,
@@ -122,9 +108,8 @@ Synth(\hihat);
     0, 1, 0, 1
 ];
 
-"Patrón post-punk cargado.".postln;
+"Patrón base cargado.".postln;
 )
-
 
 // Hi-hat continuo
 (
@@ -136,19 +121,7 @@ Synth(\hihat);
 "Hi-hat continuo activado.".postln;
 )
 
-
-// Hi-hat en contratiempos
-(
-~hihatPattern = [
-    0, 1, 0, 1,
-    0, 1, 0, 1
-];
-
-"Hi-hat en contratiempos activado.".postln;
-)
-
-
-// Kick más dinámico
+// Kick alternativo
 (
 ~kickPattern = [
     1, 0, 0, 1,
@@ -158,40 +131,29 @@ Synth(\hihat);
 "Kick alternativo activado.".postln;
 )
 
-
-// Restaurar patrón original
+// Snare con respuesta al final del compás
 (
-~kickPattern = [
-    1, 0, 0, 0,
-    1, 0, 0, 0
-];
-
 ~snarePattern = [
     0, 0, 1, 0,
-    0, 0, 1, 0
+    0, 0, 1, 1
 ];
 
-~hihatPattern = [
-    0, 1, 0, 1,
-    0, 1, 0, 1
-];
-
-"Patrón original restaurado.".postln;
+"Snare alternativo activado.".postln;
 )
 
 
 // ------------------------------------------
-// 7. CONTROL GENERAL
+// 6. LIBERAR TODOS LOS SINTETIZADORES
 // ------------------------------------------
 
-// Detener batería
-~stopDrums.value;
-
-// Liberar todos los sintetizadores
 s.freeAll;
 
-// Botón de emergencia:
+// Atajo de emergencia de SuperCollider:
 // Ctrl + .
 
-// Apagar servidor
-// s.quit;
+
+// ------------------------------------------
+// 7. APAGAR EL SERVIDOR
+// ------------------------------------------
+
+s.quit;

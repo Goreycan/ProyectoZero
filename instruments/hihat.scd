@@ -1,40 +1,29 @@
 (
 // ==========================================
 // PROYECTO ZERO
-// Instrumento: Snare
+// Instrumento: Hi-hat
 // ==========================================
 
-SynthDef(\snare, {
-    |amp = 0.22|
+SynthDef(\hihat, {
+    |amp = 0.16|
 
-    var ruido;
-    var cuerpo;
     var envolvente;
+    var ruido;
     var sonido;
 
     envolvente = EnvGen.kr(
         Env.perc(
             0.001,
-            0.12
+            0.06
         ),
         doneAction: 2
     );
 
-    ruido = HPF.ar(
-        WhiteNoise.ar,
-        1800
-    );
+    ruido = WhiteNoise.ar;
 
-    cuerpo = SinOsc.ar(
-        190,
-        0,
-        0.15
-    );
-
-    sonido = (
-        ruido * 0.9
-        +
-        cuerpo
+    sonido = HPF.ar(
+        ruido,
+        6000
     ) * envolvente * amp;
 
     Out.ar(
@@ -43,5 +32,5 @@ SynthDef(\snare, {
     );
 }).add;
 
-"Snare cargado.".postln;
+"Hi-hat cargado.".postln;
 )
